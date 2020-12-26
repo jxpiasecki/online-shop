@@ -20,26 +20,26 @@ class App extends React.Component {
 
     componentDidMount() {
         this.unsubscribeFormAuth = auth.onAuthStateChanged(async userAuth => {
-            if (!userAuth) {
-                // Sign out
-                this.setState({currentUser: null});
-                return;
-            }
-
-            // Sign in
-            const userRef = await createUserProfileDocument(userAuth);
-            userRef.onSnapshot(snapshot => {
-                this.setState({
-                    id: snapshot.id,
-                    ...snapshot.data()
+            if (userAuth) {
+                // Sign in
+                const userRef = await createUserProfileDocument(userAuth);
+                userRef.onSnapshot(snapShot => {
+                    this.setState({
+                        currentUser: {
+                            id: snapShot.id,
+                            ...snapShot.data()
+                        }
+                    }, () => console.log(this.state));
                 });
-            });
-
+            } else {
+                // Sign out, clear current user
+                //this.setState({currentUser: userAuth}, () => console.log(this.state));
+                this.setState({currentUser: null});
+            }
         });
     }
 
     componentWillUnmount() {
-        //this.setState({currentUser: null});
         this.unsubscribeFormAuth();
     }
 
