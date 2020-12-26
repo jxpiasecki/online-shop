@@ -21,7 +21,6 @@ class SignIn extends React.Component {
                 password: '',
             }
         )
-        alert('submit');
     }
 
     handleChange = e => {
