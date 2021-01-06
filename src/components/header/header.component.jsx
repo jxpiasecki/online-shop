@@ -1,14 +1,19 @@
 import React from 'react';
 import {Link, Route, Switch} from 'react-router-dom';
-import './header.styles.scss';
-import {ReactComponent as Logo} from '../../assets/crown.svg';
-import SignInAndSignUpPage from "../../pages/sign-in-and-sign-up/sign-in-and-sign-up.component";
+import {connect} from 'react-redux';
+import { createStructuredSelector} from 'reselect';
+
+import {auth} from "../../firebase/firebase.utils";
 import CartIcon from "../cart-icon/cart-icon.component";
 import CartDropdown from "../cart-dropdown/cart-dropdown.component";
-import {auth} from "../../firebase/firebase.utils";
+import {selectCartHidden} from "../../redux/cart/cart.selectors";
+import {selectCurrentUser} from "../../redux/user/user.selectors";
 
-import {connect} from 'react-redux';
 import userReducer from "../../redux/user/user.reducer";
+
+import {ReactComponent as Logo} from '../../assets/crown.svg';
+
+import './header.styles.scss';
 
 const Header = ({currentUser, toggleCartHidden}) => (
     <div className="header">
@@ -29,9 +34,22 @@ const Header = ({currentUser, toggleCartHidden}) => (
     </div>
 )
 
-const mapStateToProps = state => ({
-    currentUser: state.user.currentUser,
-    toggleCartHidden: state.cart.hidden
+// redux
+// const mapStateToProps = state => ({
+//     currentUser: state.user.currentUser,
+//     toggleCartHidden: state.cart.hidden
+// })
+
+//redux using reselect(caching)
+// const mapStateToProps = state => ({
+//     currentUser: selectCurrentUser(state),
+//     toggleCartHidden: selectCartHidden(state)
+// })
+
+// redux using reselect(caching) using structured selector
+const mapStateToProps = createStructuredSelector({
+    currentUser: selectCurrentUser,
+    toggleCartHidden: selectCartHidden
 })
 
 export default connect(mapStateToProps)(Header);
